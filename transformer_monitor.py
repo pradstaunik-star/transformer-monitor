@@ -145,6 +145,8 @@ def dashboard():
                 <div class="current-title">Current Values</div>
                 <div class="current-row"><span>Fan Mode</span><span id="cv-fan-mode">—</span></div>
                 <div class="current-row"><span>Fans</span><span id="cv-fans">—</span></div>
+                <div class="current-row"><span>Fan ON above</span><span id="cv-fan-on-thresh">—</span></div>
+                <div class="current-row"><span>Fan OFF below</span><span id="cv-fan-off-thresh">—</span></div>
             </div>
             <form id="frm-fans">
                 <div class="field">
@@ -269,11 +271,11 @@ def dashboard():
             document.getElementById('cv-load').innerText = d.load_percent + ' %';
             document.getElementById('cv-fan-mode').innerText = d.fan_mode.toUpperCase();
             document.getElementById('cv-fans').innerText = d.fans_on ? 'ON' : 'OFF';
+            document.getElementById('cv-fan-on-thresh').innerText = d.fan_on_threshold + ' °C';
+            document.getElementById('cv-fan-off-thresh').innerText = d.fan_off_threshold + ' °C';
             if (!modeUserEdited) {
                 document.getElementById(d.fan_mode === 'auto' ? 'fan_mode_auto' : 'fan_mode_manual').checked = true;
                 updateModeUI();
-                document.getElementById('fan_on_threshold').placeholder = d.fan_on_threshold;
-                document.getElementById('fan_off_threshold').placeholder = d.fan_off_threshold;
             }
             if (!fanUserEdited) {
                 document.getElementById(d.fans_on ? 'fans_on' : 'fans_off').checked = true;
@@ -311,7 +313,10 @@ def dashboard():
         var l = document.getElementById('load').value;
         if (a) data.ambient_temperature = parseFloat(a);
         if (l) data.load_percent = parseFloat(l);
-        postSettings(data, 'msg-input', null);
+        postSettings(data, 'msg-input', function() {
+            document.getElementById('ambient').value = '';
+            document.getElementById('load').value = '';
+        });
     });
 
     // Reset button
@@ -341,6 +346,8 @@ def dashboard():
         postSettings(data, 'msg-fans', function() {
             fanUserEdited = false;
             modeUserEdited = false;
+            document.getElementById('fan_on_threshold').value = '';
+            document.getElementById('fan_off_threshold').value = '';
         });
     });
 </script>
