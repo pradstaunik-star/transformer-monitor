@@ -1,3 +1,4 @@
+import os
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import cm
@@ -5,8 +6,10 @@ from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Preformatted
 from reportlab.lib.enums import TA_LEFT
 
+output_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "API_Reference.pdf")
+
 doc = SimpleDocTemplate(
-    r"C:\_Coding\_G2R\API_Reference.pdf",
+    output_path,
     pagesize=A4,
     leftMargin=2.5*cm, rightMargin=2.5*cm,
     topMargin=2.5*cm, bottomMargin=2.5*cm,
